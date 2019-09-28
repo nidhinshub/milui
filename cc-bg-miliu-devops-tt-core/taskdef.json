@@ -1,0 +1,57 @@
+{
+        "executionRoleArn": "arn:aws:iam::902747173779:role/ecsTaskExecutionRole",
+        "volumes": [],
+        "status": "ACTIVE",
+        "cpu": "1024",
+        "compatibilities": [
+            "EC2"
+        ],
+        "requiresCompatibilities": [],
+        "containerDefinitions": [
+            {
+                "image": "<IMAGE1_NAME>",
+                "portMappings": [
+                    {
+                        "hostPort": 0,
+                        "containerPort": 8082,
+                        "protocol": "tcp"
+                    }
+                ],
+                "name": "container-miliu-devops-tt-core",
+                "mountPoints": [],
+                "environment": [],
+                "logConfiguration": {
+                    "options": {
+                        "awslogs-group": "cwlogs-miliu-devops-tt-core",
+                        "awslogs-stream-prefix": "bg-miliu-devops-tt-core",
+                        "awslogs-region": "us-east-1"
+                    },
+                    "logDriver": "awslogs"
+                },
+                "cpu": 0,
+                "volumesFrom": [],
+                "essential": true,
+                "entryPoint": [
+                    "java",
+                    "-jar",
+                    "miliu-devops-tt-core-0.0.1.war"
+                ]
+            }
+        ],
+        "taskDefinitionArn": "arn:aws:ecs:us-east-1:902747173779:task-definition/taskdef-miliu-devops-tt:16",
+        "requiresAttributes": [
+            {
+                "name": "com.amazonaws.ecs.capability.ecr-auth"
+            },
+            {
+                "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+            },
+            {
+                "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+            }
+        ],
+        "placementConstraints": [],
+        "family": "taskdef-miliu-devops-tt",
+        "memory": "1536",
+        "revision": 18
+    }

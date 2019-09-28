@@ -1,0 +1,34 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      java: openjdk8
+  pre_build:
+    commands:
+      - echo maven buil process
+      - mvn clean install
+      - echo Logging in to Amazon ECR...
+      - $(aws ecr get-login --no-include-email --region us-east-1)
+      - REPOSITORY_URI=902747173779.dkr.ecr.us-east-1.amazonaws.com/ecr-miliu-devops-tt
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=container-bg-miliu-devops-tt-core-${COMMIT_HASH:=container-miliu-devops-tt-core}
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...`$IMAGE_TAG`           
+      - docker build -t cc-miliu-devops-tt-core .
+      - docker tag cc-miliu-devops-tt-core $REPOSITORY_URI:$IMAGE_TAG 
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker image....
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      #- printf '{"ImageURI":"%s"}' $REPOSITORY_URI:$IMAGE_TAG > imageDetail.json
+      - printf '[{"name":"container-miliu-devops-tt-core","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > image-def-miliu-devops-tt-core.json
+artifacts:
+      files:
+        - Dockerfile
+        - appspec.yaml
+        - taskdef.json
+        - imageDetail.json
+        - image-def-miliu-devops-tt-core.json
